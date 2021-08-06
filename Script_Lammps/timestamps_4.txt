@@ -1,0 +1,23 @@
+6
+20
+46
+205
+2073
+9885
+20971
+66700
+100000
+100001
+
+# Questi timesteps corrispondono ai seguenti tempi LJ
+# per informazioni vedi anche https://docs.lammps.org/dump_modify.html 
+# 0.03
+# 0.1
+# 0.23
+# 1.025
+# 10.365
+# 49.425
+# 104.855
+# 333.5
+# 500
+# 501 

@@ -1,0 +1,122 @@
+
+units lj
+atom_style atomic  
+boundary p p p #periodic boundary cond. in each direction
+
+region my_region block 0 38.5 0 38.5 0 38.5 # 38.5 = 9.4 * 4096/1000 ?
+create_box 2 my_region
+
+#variable seed equal floor(random(1,900000,3259))
+
+shell 'bash genera_seed.sh'
+
+variable seed file seeds.txt 
+
+print "Il seed all'inizio e'"
+print "${seed}"
+
+create_atoms 1 random 3277 ${seed} my_region #random numero_atomi seed
+
+next seed
+
+print "Il seed e' ora" 
+print "${seed}" 
+
+create_atoms 2 random 819 ${seed} my_region
+
+#create_atoms 1 random 3277 228609 my_region #random numero_atomi seed
+#create_atoms 2 random 819 621203 my_region 
+
+mass 1 1
+mass 2 1
+
+next seed
+
+print "Il seed e' ora" 
+print "${seed}" 
+
+velocity all create 0.5495 ${seed} dist gaussian
+
+pair_style  lj/cut 	 2.5   # Define interaction potential.
+
+pair_modify tail no # Articolo Nature
+
+#pair_coeff  1 1  1.0 1.0  2.5  # type type eps sigma rcut
+#pair_coeff  1 2  1.5 0.80 2.0  #typeA typeB epsAB sigmaAB rcutAB=2.5*0.8=2.0
+#pair_coeff  2 2  0.5 0.88 2.2  #typeB typeB epsBB sigmaBB rcutBB=2.5*0.88=2.2
+
+pair_coeff  1 1  1.0 1.0
+pair_coeff  1 2  1.5 0.80 
+pair_coeff  2 2  0.5 0.88 
+
+timestep 0.001 #Delta t modificato da 0.005 per evitare l'errore degli atomi scomparsi
+
+neighbor          0.3 bin
+neigh_modify      every 1 delay 0 check yes # Update neighbor
+
+#group A type 1
+#group B type 2
+#compute msdA A msd   #default com=no and average=no so rvec(t=0) used
+#compute msdB B msd   #default com=no and average=no so rvec(t=0) used
+
+variable tLJ equal step*dt
+
+variable P equal press # https://www.researchgate.net/post/Problem-with-pressure-fluctuations-in-LAMMPS
+variable T equal temp 
+#variable tmsd equal logfreq3(1,200,10000000)
+
+fix PressAve all ave/time 10 1000 10000 v_P
+fix TempAve all ave/time 10 1000 10000 v_T
+
+
+thermo_style custom step v_tLJ temp press f_TempAve f_PressAve density 
+#thermo v_tmsd #print every v_tmsd steps
+
+#thermo 2 #print every 2 MDsteps
+ 
+# print every 50 MD steps  positions and velocities into confdump.*.data files
+#dump mydump all custom 5000 mio_confdump.*.data id type x y z vx vy vz
+#dump_modify mydump sort id
+
+minimize 1.0e-4 1.0e-6 1000 1000
+
+# set numerical integrator MSD
+
+# compute msdA A msd   #default com=no and average=no so rvec(t=0) used
+# fix msdAfix A ave/time 1 1 1 c_msdA[4] file msdA_mio_2.data
+# compute msdB B msd   #default com=no and average=no so rvec(t=0) used
+# fix msdBfix B ave/time 1 1 1 c_msdB[4] file msdB_mio_2.data
+
+
+fix 1 all npt temp 0.5495 0.5495 $(100.0*dt) iso 0.4888 0.4888 $(100.0*dt)
+run 46360 # 10 times relaxation time
+unfix 1 
+
+fix 2 all npt temp 0.50 0.50 $(100.0*dt) iso 1.00 1.00 $(100.0*dt)
+run 46360 # 10 volte il tempo di rilassamento?
+unfix 2
+
+fix 3 all npt temp 0.44 0.44 $(100.0*dt) iso 2.00 2.00 $(100.0*dt)
+run 46360
+unfix 3
+
+fix 4 all npt temp 0.44 0.44 $(100.0*dt) iso 2.93 2.93 $(100.0*dt)
+run 46360
+unfix 4
+
+#dump mydump all custom 10000 stato_iniziale.*.data id type x y z vx vy vz
+#dump_modify mydump sort id
+
+fix 5 all npt temp 0.44 0.44 $(100.0*dt) iso 2.93 2.93 $(100.0*dt)
+run 46360
+unfix 5
+
+write_data conf_equil_lammps_T044_P293_random_seed_file
+
+
+
+## Canonical (NVT) Run (pressure gets higher, 0.217)
+
+# fix 6 all nvt temp 0.56 0.56 $(100.0*dt)
+# run 463600
+

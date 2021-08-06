@@ -1,0 +1,42 @@
+atom_style atomic  
+boundary p p p #periodic boundary cond. in each direction
+
+read_data conf_equil_T044_P293
+
+pair_style  lj/cut 2.5   # Define interaction potential.
+
+pair_modify tail no # Articolo Nature?
+
+#pair_coeff  1 1  1.0 1.0  2.5  # type type eps sigma rcut
+#pair_coeff  1 2  1.5 0.80 2.0  #typeA typeB epsAB sigmaAB rcutAB=2.5*0.8=2.0 r cut come Articolo KALJ
+#pair_coeff  2 2  0.5 0.88 2.2  #typeB typeB epsBB sigmaBB rcutBB=2.5*0.88=2.2
+
+pair_coeff  1 1  1.0 1.0  2.5 # Articolo Nature, cut 2.5
+pair_coeff  1 2  1.5 0.80 2.5 # Articolo Nature
+pair_coeff  2 2  0.5 0.88 2.5 # Articolo Nature
+
+#shell 'bash ./genera_seed.sh'
+
+#shell 'echo $RANDOM > ./seeds.txt' 
+
+
+variable seed file seeds_recuperati.txt 
+
+label loop
+variable contatore loop 20
+
+print "Il seed e' " 
+print "${seed}" 
+
+velocity all create 0.44 ${seed} dist gaussian
+
+#velocity all create 0.44 92561 dist gaussian
+
+write_data MB_initial_velocities_run_${contatore}_seed-${seed}
+
+next seed
+next contatore
+jump SELF loop
+
+#label break 
+#variable contatore delete

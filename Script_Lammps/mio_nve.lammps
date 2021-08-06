@@ -1,0 +1,60 @@
+atom_style atomic  
+boundary p p p #periodic boundary cond. in each direction
+
+read_data conf_equil_T044_P293
+
+
+pair_style  lj/cut 2.5   # Define interaction potential.
+
+pair_modify tail no # Articolo Nature?
+
+#pair_coeff  1 1  1.0 1.0  2.5  # type type eps sigma rcut
+#pair_coeff  1 2  1.5 0.80 2.0  #typeA typeB epsAB sigmaAB rcutAB=2.5*0.8=2.0 r cut come Articolo KALJ
+#pair_coeff  2 2  0.5 0.88 2.2  #typeB typeB epsBB sigmaBB rcutBB=2.5*0.88=2.2
+
+pair_coeff  1 1  1.0 1.0  2.5 # Articolo Nature, cut 2.5
+pair_coeff  1 2  1.5 0.80 2.5 # Articolo Nature
+pair_coeff  2 2  0.5 0.88 2.5 # Articolo Nature
+
+#shell 'bash ./genera_seed.sh'
+
+#shell 'echo $RANDOM > ./seeds.txt' 
+
+variable seed file seeds.txt 
+
+print "Il seed e' " 
+print "${seed}" 
+
+velocity all create 0.44 ${seed} dist gaussian
+
+write_data MB_initial_velocities_seed-${seed}
+
+#timestep 0.001 #Delta t 
+
+timestep 0.005 
+
+neighbor          0.3 bin
+neigh_modify      every 1 delay 0 check yes # Update neighbor
+
+group A type 1
+group B type 2 	     # B is smaller
+compute msdA A msd   # default com=no and average=no so rvec(t=0) used
+compute msdB B msd   # default com=no and average=no so rvec(t=0) used
+
+#dump            1 all atom 100 tmp.dump
+#dump_modify     1 every v_s
+
+variable tmsd equal logfreq3(1,200,100000)
+#variable outmsd equal logfreq3(1,10,10000)
+variable tLJ equal step*dt
+thermo_style custom v_tLJ c_msdA[4] c_msdB[4]
+thermo v_tmsd
+
+variable        f file timestamps_4.txt # vedi https://docs.lammps.org/dump_modify.html per informazioni su come funziona il dump delle configurazioni a tempi scelti
+variable        s equal next(f)
+dump mydump all custom 100000 confdump.*.data id type x y z vx vy vz 
+dump_modify mydump sort id every v_s first no
+
+# set numerical integrator
+fix nve1 all nve # NVE; default is velocity verlet
+run 100000  
