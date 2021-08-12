@@ -50,7 +50,7 @@ variable tLJ equal step*dt
 thermo_style custom v_tLJ c_msdA[4] c_msdB[4]
 thermo v_tmsd
 
-variable        f file timestamps_4.txt # vedi https://docs.lammps.org/dump_modify.html per informazioni su come funziona il dump delle configurazioni a tempi scelti
+variable f file timestamps_4.txt # vedi https://docs.lammps.org/dump_modify.html per informazioni su come funziona il dump delle configurazioni a tempi scelti
 variable        s equal next(f)
 dump mydump all custom 100000 confdump.*.data id type x y z vx vy vz 
 dump_modify mydump sort id every v_s first no
