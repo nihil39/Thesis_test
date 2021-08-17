@@ -1,4 +1,4 @@
-atom_style atomic  
+aom_style atomic  
 boundary p p p #periodic boundary cond. in each direction
 
 read_data conf_equil_T044_P293
@@ -19,8 +19,7 @@ pair_coeff  2 2  0.5 0.88 2.5 # Articolo Nature
 
 #shell 'echo $RANDOM > ./seeds.txt' 
 
-
-variable seed file seeds_recuperati.txt 
+variable seed file seeds_recuperati.txt #creato da script_recupero_seed.sh 
 
 label loop
 variable contatore loop 20
@@ -32,7 +31,7 @@ velocity all create 0.44 ${seed} dist gaussian
 
 #velocity all create 0.44 92561 dist gaussian
 
-write_data MB_initial_velocities_run_${contatore}_seed-${seed}
+write_data ./configurazioni_iniziali/MB_initial_velocities_run_${contatore}_seed-${seed}
 
 next seed
 next contatore

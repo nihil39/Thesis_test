@@ -7,7 +7,7 @@ do
 	
 		for k in {01..20};
 		do
-		  bash ../genera_seed.sh
+		  bash ../genera_seed.sh # deve generare un solo seed, altrimenti c'e' ambiguita' sulla variabile seed
 		  file="./seeds.txt"
 		  seed=`cat "$file"`
 		  #seed=$(cat "$file")
