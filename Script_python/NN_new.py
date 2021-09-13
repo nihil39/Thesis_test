@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
 import os
 import sys
 import glob
@@ -11,104 +8,52 @@ import h5py
 import math
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from tensorflow import keras
+from sklearn.model_selection import train_test_split
 
-
-# In[ ]:
-
-
-#scarica il dataset modelnet40 usato nell'articolo DGCNN
-
-get_ipython().system('wget --no-check-certificate https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip')
-get_ipython().system('unzip modelnet40_ply_hdf5_2048.zip')
-get_ipython().system('mv modelnet40_ply_hdf5_2048 data/')
-get_ipython().system('rm -f modelnet40_ply_hdf5_2048.zip')
-
-
-# In[ ]:
-
-
-#legge dati e label
-def load_data_cls(partition):
-    DATA_DIR = 'data'
-    all_data = []
-    all_label = []
-    for h5_name in glob.glob(os.path.join(DATA_DIR,'*%s*.h5'%partition)):
-        f = h5py.File(h5_name, 'r+')
-        data = f['data'][:].astype('float32')
-        label = f['label'][:].astype('int64')
-        f.close()
-        all_data.append(data)
-        all_label.append(label)
-    all_data = np.concatenate(all_data, axis=0)
-    all_label = np.concatenate(all_label, axis=0)
-    return all_data, all_label
-
-
-# In[ ]:
-
-
-# funzioni per dataugmentation (random traslation, rotations, jitter delle pointlcoud)
-def translate_pointcloud(pointcloud):
-    xyz1 = np.random.uniform(low=2./3., high=3./2., size=[3])
-    xyz2 = np.random.uniform(low=-0.2, high=0.2, size=[3])
-       
-    translated_pointcloud = np.add(np.multiply(pointcloud, xyz1), xyz2).astype('float32')
-    return translated_pointcloud
-
-def rotate_pointcloud(pointcloud):
-    theta = np.pi*2 * np.random.uniform()
-    rotation_matrix = np.array([[np.cos(theta), -np.sin(theta)],[np.sin(theta), np.cos(theta)]])
-    pointcloud[:,[0,2]] = pointcloud[:,[0,2]].dot(rotation_matrix) # random rotation (x,z)
-    return pointcloud
-
-def jitter_pointcloud(pointcloud, sigma=0.01, clip=0.02):
-    N, C = pointcloud.shape
-    pointcloud += np.clip(sigma * np.random.randn(N, C), -1*clip, clip)
-    return pointcloud
-
-
-# In[ ]:
-
-
-# clase per leggere il dataset e formattarlo in modo appopriato per l'input della DGCNN 
+# classe per leggere il dataset e formattarlo in modo appropriato per l'input della DGCNN 
 # il dataset contiene tre tipi di oggetti:
 # points: la point cloud che contiene le coordinate dei punti: shape (N, P, C_p) N=numero esempi, P=numero punti per ogni esempio, C_p=numero feature associate a ciascun punto
 # features: le feature associate ad ogni punto (possono essere le stesse coordinate o queste + ulteriori features): shape (N, P, C_f)
 # mask: una mask che ha valore 1 o 0 per mascherare punti non fisici (quando P di un dato evento è inferiore alla dimensione con cui si e' fissato P): shape (N,P,1) 
 
-x(8000,4096,7) # x,y,z,vx,vy,vz,tipo
-y(8000,200,3)
+#Importa configurazioni
 
-inport train_test_split from sklearn 
+#x(8000,4096,7) # tipo,x,y,z,vx,vy,vz
+#y(8000,200,3)
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, shuffle=True, random_seed=1234)
+configurazioni = np.load('configurazione_posizioni_completa.npy')
+msd = np.load('msd_completo.npy')
 
-x_train
-x_test
-y_train
-y_test
-... 
+configurazioni_train, configurazioni_test, msd_train, msd_test = train_test_split(configurazioni, msd, shuffle = True, train_size = 0.8, random_state = 1234) 
 
-class Dataset(object):
-    def __init__(self, partition='train', num_points=4096): 
+class Dataset(object): #Is object really useful?
+    def __init__(self, partition='train', num_points = 4096): # va specificato il numero di punti anche alla riga 86?
         if partition == 'train':
-          self.data, self.label = x_train,y_train
-        else
-          self.data, self.label = x_test,y_test
+           self.data, self.label = configurazioni_train, msd_train
+        else:
+           self.data, self.label = configurazioni_test, msd_test
         self.num_points = num_points
-       self._values = {}
+        self._values = {}
         self._label = None
         self._load()
         
     def __len__(self):
         return len(self._label)
 
+## Se servisse randomizzare le 4096 configurazioni iniziali delle particelle ##
+#    lista = np.arange(4096)
+#np.random.shuffle(lista)
+#
+#print(lista)
+#lista[:1024]:w
+#pointcloud = self.data[:, lista[:1024], :3]
     def _load(self):
-        pointcloud = self.data[:, :4096, :3]
+        pointcloud = self.data[:, :4096, 1:4] # Configurazioni [configurazioni, numero particelle, tipo- coordinate- velocita']
         mask = np.ones(shape=(pointcloud.shape[0],pointcloud.shape[1],1))
         features = self.data[:, :4096, :] 
-        self._label = self.label[:,[0,100,199],1] --> (8000,3)
+        self._label = self.label[:,[0,100,199],1]  #msd[tutte le 8000 configurazioni, tre valori, msd particelle tipo A]
         self._values['points'] = pointcloud
         self._values['features'] = features
         self._values['mask'] = mask
@@ -119,11 +64,11 @@ class Dataset(object):
         else:
             return self._values[key]
     
-    @property
+    @property #Features and validation?
     def X(self):
         return self._values
     
-    @property
+    @propertyi #Label
     def y(self):
         return self._label
 
@@ -137,15 +82,9 @@ class Dataset(object):
         self._label = self._label[shuffle_indices]  
 
 
-# In[ ]:
-
-
 #legge i dati di training e test
-train = Dataset(partition='train', num_points=4096)
-test = Dataset(partition='test', num_points=4096)
-
-
-# In[ ]:
+train = Dataset(partition = 'train', num_points = 4096)
+test = Dataset(partition = 'test', num_points = 4096)
 
 
 # mostra il contenuto dei dati
@@ -157,19 +96,17 @@ print(train['mask'].shape)
 print(test['mask'].shape)
 
 
-# In[ ]:
-
-
-#DGCNN
+# DGCNN
+# https://github.com/hqucms/ParticleNet/blob/master/tf-keras/tf_keras_model.py
 
 # A shape is (N, P_A, C), B shape is (N, P_B, C)
 # D shape is (N, P_A, P_B)
 def batch_distance_matrix_general(A, B):
     with tf.name_scope('dmat'):
-        r_A = tf.reduce_sum(A * A, axis=2, keepdims=True)
-        r_B = tf.reduce_sum(B * B, axis=2, keepdims=True)
-        m = tf.matmul(A, tf.transpose(B, perm=(0, 2, 1)))
-        D = r_A - 2 * m + tf.transpose(r_B, perm=(0, 2, 1))
+        r_A = tf.reduce_sum(A * A, axis=2, keepdims = True)
+        r_B = tf.reduce_sum(B * B, axis=2, keepdims = True)
+        m = tf.matmul(A, tf.transpose(B, perm = (0, 2, 1)))
+        D = r_A - 2 * m + tf.transpose(r_B, perm = (0, 2, 1))
         return D
     
 def knn(num_points, k, topk_indices, features):
@@ -290,15 +227,15 @@ def get_DGCNN(num_classes, input_shapes):
     """
     setting = _DotDict()
     setting.num_class = num_classes
-    # conv_params: list of tuple in the format (K, (C1, C2, C3))
+    # conv_params: list of tuple in the format (K, (C1, C2, C3)) (k primi vicini, numero di filtri C1 C2 C3)
     setting.conv_params = [
-        (20, (64, 64, 64)),
+        (20, (64, 64, 64)), 
         (20, (64, 64, 64)),
         (20, (128, 128, 128)),
         (20, (256, 256, 256)),
         ]
     # conv_pooling: 'average' or 'max'
-    setting.conv_pooling = 'max'
+    setting.conv_pooling = 'max' #prova a modificare questo
     # fc_params: list of tuples in the format (C, drop_rate)
     setting.fc_params = [
         (512, 0.5),
@@ -313,17 +250,10 @@ def get_DGCNN(num_classes, input_shapes):
 
     return keras.Model(inputs=[points, features, mask], outputs=outputs, name='DGCNN_SG')
 
-
-# In[ ]:
-
-
 num_classes = 3
 input_shapes = {k:train[k].shape[1:] for k in train.X}
 print(input_shapes)
 model = get_DGCNN(num_classes, input_shapes)
-
-
-# In[ ]:
 
 
 import logging
@@ -336,111 +266,120 @@ def lr_schedule(epoch):
     logging.info('Learning rate: %f'%lr)
     return lr
 
-
-# In[ ]:
-
-
-model.compile(loss='mse',
-              optimizer=keras.optimizers.Adam(learning_rate=lr_schedule(0)),
-              metrics=['mae'])
+model.compile(loss = 'mse',
+              optimizer = keras.optimizers.Adam(learning_rate=lr_schedule(0)),
+              metrics = ['mae'])
 model.summary()
 
 
-# In[ ]:
-
-
-# Prepare model model saving directory.
+# Prepare model saving directory.
 import os
 save_dir = 'model_checkpoints'
-model_name = 'DGCNN_modelbest.h5'
+
+#model_name = 'DGCNN_modelbest.h5'
+#model_name = 'DGCNN_k10_e30_bs32_cpMax-epoch{epoch:02d}-mae{val_mae:.2f}.h5'
+
+model_name = 'DGCNN_k10_e30_bs32_cpMax.h5'
+
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
 filepath = os.path.join(save_dir, model_name)
 
 # Prepare callbacks for model saving and for learning rate adjustment.
-checkpoint = keras.callbacks.ModelCheckpoint(filepath=filepath,
-                             monitor='val_mae',
-                             verbose=1,
-                             save_best_only=True)
+checkpoint = keras.callbacks.ModelCheckpoint(filepath = filepath,
+                             monitor = 'val_mae',
+                             verbose = 1,
+                             save_best_only = True)
 
 lr_scheduler = keras.callbacks.LearningRateScheduler(lr_schedule)
 progress_bar = keras.callbacks.ProgbarLogger()
 callbacks = [checkpoint, lr_scheduler, progress_bar]
 
 
-# In[ ]:
+# TRAINING PARAMETERS
 
+batch_size = 32 #era 32
+epochs = 30 # 30 valore iniziale
 
-# Training parameters
-batch_size = 32
-epochs = 30
-
-
-# In[ ]:
-
-
+# model.fit() to train the model https://www.tensorflow.org/api_docs/python/tf/keras/Model
 train.shuffle()
-model.fit(train.X, train.y,
-          batch_size=batch_size,
-          epochs=epochs,
-          validation_data=(test.X, test.y),
-          shuffle=True,
-          callbacks=callbacks)
+history = model.fit(train.X, train.y,
+          batch_size = batch_size,
+          epochs = epochs,
+          validation_data = (test.X, test.y),
+          shuffle = True,
+          callbacks = callbacks)
 
+#model.load_weights("model_checkpoints/DGCNN_modelbest.h5")
 
-# In[ ]:
+model.load_weights("model_checkpoints/DGCNN_k10_e30_bs32_cpMax.h5")
+#model.load_weights("model_checkpoints/prova.h5")
 
+test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1) #Restituisce prima la loss e poi le metrics definite in model.compile
 
-model.load_weights("model_checkpoints/DGCNN_modelbest.h5")
+predictions_=  model.predict(test.X, test.y, verbose = 1) #vero test.
+#separare i tre singoli punti del msd
 
+### PLOT ###
 
-# In[ ]:
+mae = history.history['mae']
+val_mae = history.history['val_mae']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+epochs_range = range(1, len(loss) + 1)
 
+plt.subplot(1, 2, 1)
+plt.plot(epochs_range, loss, label = 'Training Loss')
+plt.plot(epochs_range, val_loss, label = 'Validation Loss')
+plt.legend(loc = 'upper right')
+plt.title('Training and Validation Loss')
 
-test_loss, test_mae = model.evaluate(test.X, test.y, verbose=2)
+#plt.show()
+#plt.figure(figsize = (8, 8))
 
+plt.subplot(1, 2, 2)
+plt.plot(epochs_range, mae, label = 'Training MAE')
+plt.plot(epochs_range, val_mae, label = 'Validation MAE')
+plt.legend(loc = 'upper right')
+plt.title('Training and Validation MAE')
 
-# In[ ]:
+plt.savefig('TaV_Loss_MAE_k10_e30_bs32_cpMax.pdf')
 
+#plt.savefig('prova1.pdf')
+###################
 
-from sklearn.metrics import classification_report, confusion_matrix
-
-pred = model.predict(test.X)
-matrix = confusion_matrix(test.y.argmax(axis=1), pred.argmax(axis=1), normalize='true')
-
-
-# In[ ]:
-
-
-#confusion matrix
-def print_cm(cm, labels, hide_zeroes=False, hide_diagonal=False, hide_threshold=None):
-    """pretty print for confusion matrixes"""
-    columnwidth = max([len(x) for x in labels] + [5])  # 5 is value length
-    empty_cell = " " * columnwidth
-    # Print header
-    print("    " + empty_cell, end=" ")
-    for label in labels:
-        print("%{0}s".format(columnwidth) % label, end=" ")
-    print()
-
-    # Print rows
-    for i, label1 in enumerate(labels):
-        print("    %{0}s".format(columnwidth) % label1, end=" ")
-        for j in range(len(labels)):
-            cell = "%{0}.2f".format(columnwidth) % cm[i, j]
-            if hide_zeroes:
-                cell = cell if float(cm[i, j]) != 0 else empty_cell
-            if hide_diagonal:
-                cell = cell if i != j else empty_cell
-            if hide_threshold:
-                cell = cell if cm[i, j] > hide_threshold else empty_cell
-            print(cell, end=" ")
-        print()
-
-
-# In[ ]:
-
-
-le_label=[ str(i) for i in range(test.y.shape[1])]
-print_cm(matrix,le_label)
+#from sklearn.metrics import classification_report, confusion_matrix
+#
+#pred = model.predict(test.X)
+#matrix = confusion_matrix(test.y.argmax(axis=1), pred.argmax(axis=1), normalize='true')
+#
+#
+##confusion matrix
+#def print_cm(cm, labels, hide_zeroes=False, hide_diagonal=False, hide_threshold=None):
+#    """pretty print for confusion matrixes"""
+#    columnwidth = max([len(x) for x in labels] + [5])  # 5 is value length
+#    empty_cell = " " * columnwidth
+#    # Print header
+#    print("    " + empty_cell, end=" ")
+#    for label in labels:
+#        print("%{0}s".format(columnwidth) % label, end=" ")
+#    print()
+#
+#    # Print rows
+#    for i, label1 in enumerate(labels):
+#        print("    %{0}s".format(columnwidth) % label1, end=" ")
+#        for j in range(len(labels)):
+#            cell = "%{0}.2f".format(columnwidth) % cm[i, j]
+#            if hide_zeroes:
+#                cell = cell if float(cm[i, j]) != 0 else empty_cell
+#            if hide_diagonal:
+#                cell = cell if i != j else empty_cell
+#            if hide_threshold:
+#                cell = cell if cm[i, j] > hide_threshold else empty_cell
+#            print(cell, end=" ")
+#        print()
+#
+#
+#le_label=[ str(i) for i in range(test.y.shape[1])]
+#print_cm(matrix,le_label)
 
