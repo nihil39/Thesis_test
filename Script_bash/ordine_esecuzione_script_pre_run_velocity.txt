@@ -1,4 +1,0 @@
-1 script_rinominazione_pre_run_velocity.sh
-2 multi-directory-run-velocity.sh -> mio_nve.lammps
-3 script_recupero_seed.sh 
-4 associa_seed_a_velocita.sh -> run_recupero_velocita.lammps

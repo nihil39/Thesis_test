@@ -64,7 +64,7 @@ class Dataset(object): #Is object really useful?
         else:
             return self._values[key]
     
-    @property #Features and validation?
+    @property #Features and validation ? points features and mask
     def X(self):
         return self._values
     
@@ -259,7 +259,7 @@ model = get_DGCNN(num_classes, input_shapes)
 import logging
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
-def lr_schedule(epoch):
+def lr_schedule(epoch): # prova 3e-4 
     lr = 1e-3
     if epoch > 10:
         lr *= 0.1
@@ -287,7 +287,7 @@ filepath = os.path.join(save_dir, model_name)
 
 # Prepare callbacks for model saving and for learning rate adjustment.
 checkpoint = keras.callbacks.ModelCheckpoint(filepath = filepath,
-                             monitor = 'val_mae',
+                             monitor = 'val_mae', # cosa sceglie come best
                              verbose = 1,
                              save_best_only = True)
 
@@ -317,11 +317,11 @@ model.load_weights("model_checkpoints/DGCNN_k10_e30_bs32_cpMax.h5")
 
 test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1) #Restituisce prima la loss e poi le metrics definite in model.compile
 
-predictions_=  model.predict(test.X, test.y, verbose = 1) #vero test.
+predictions =  model.predict(test.X, verbose = 1) # in output qualcosa con la forma di test.y
 #separare i tre singoli punti del msd
 
 ### PLOT ###
-
+# Salvare history, mae, val mae, loss, val loss in un altro array
 mae = history.history['mae']
 val_mae = history.history['val_mae']
 loss = history.history['loss']

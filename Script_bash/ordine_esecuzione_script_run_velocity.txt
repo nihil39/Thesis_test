@@ -1,0 +1,10 @@
+1 script_rinominazione_pre_run_velocity.sh
+2 multi-directory-run-velocity.sh -> mio_nve.lammps
+3 script_recupero_seed.sh
+4 associa_seed_a_velocita.sh -> run_recupero_velocita.lammps
+
+DOPO RUN VELOCITA' - PER CARICARE NEGLI ARRAY NUMPY
+
+5 entra_ed_ordina.sh 
+6 script_carica_dati_in_array_numpy.sh -> riempi_array_{configurazioni,msd}.py
+7 unisci_array_salvati.py
