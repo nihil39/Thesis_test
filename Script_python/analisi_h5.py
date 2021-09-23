@@ -1,6 +1,8 @@
 import h5py
 import tensorflow as tf
 from tensorflow import keras
+import numpy as np
+from sklearn.model_selection import train_test_split
 
 #import matplotlib.pyplot as plt
 #import numpy as np
@@ -17,7 +19,7 @@ msd = np.load('msd_completo.npy')
 configurazioni_train, configurazioni_test, msd_train, msd_test = train_test_split(configurazioni, msd, shuffle = True, train_size = 0.8, random_state = 1234) 
 
 class Dataset(object): #Is object really useful?
-    def __init__(self, partition='train', num_points = 4096): # va specificato il numero di punti anche alla riga 86?
+    def __init__(self, partition='train', num_points = 4096):  
         if partition == 'train':
            self.data, self.label = configurazioni_train, msd_train
         else:
@@ -56,7 +58,7 @@ class Dataset(object): #Is object really useful?
     def X(self):
         return self._values
     
-    @propertyi #Label
+    @property #Label, known value for old data
     def y(self):
         return self._label
 
@@ -72,22 +74,38 @@ class Dataset(object): #Is object really useful?
 
 #legge i dati di training e test
 train = Dataset(partition = 'train', num_points = 4096)
+test = Dataset(partition = 'test', num_points = 4096)
 
+import logging
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
+def lr_schedule(epoch): # prova 3e-4 
+    lr = 1e-3
+    if epoch > 10:
+        lr *= 0.1
+    logging.info('Learning rate: %f'%lr)
+    return lr
 
 model = keras.models.load_model(model_name)
-
 #model.load_weights("model_checkpoints/DGCNN_modelbest.h5")
+
+model.compile(loss = 'mse',
+              optimizer = keras.optimizers.Adam(learning_rate = lr_schedule(0)),
+              metrics = ['mae'])
 
 
 test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1)
 
-predictions =  model.predict(test.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction
+predictions = model.predict(test.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction, predicted value for new unlabeled data (or pretend that you do not have a label)
 
 
+np.savetxt('test_loss.txt', test_loss)
+np.savetxt('test_mae.txt', test_mae)
+np.save('predictions.npy', predictions)
+np.save('test.y.npy', test.y)
 
-#predict_=  model.predict(test.X) vero test.
 
+# perche' 1600,3 ? valore del msd nel punto 199 troppo basso
 
 #def read_hdf5(filename):
 #
