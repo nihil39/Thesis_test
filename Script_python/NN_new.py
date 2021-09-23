@@ -29,7 +29,7 @@ msd = np.load('msd_completo.npy')
 configurazioni_train, configurazioni_test, msd_train, msd_test = train_test_split(configurazioni, msd, shuffle = True, train_size = 0.8, random_state = 1234) 
 
 class Dataset(object): #Is object really useful?
-    def __init__(self, partition='train', num_points = 4096): # va specificato il numero di punti anche alla riga 86?
+    def __init__(self, partition = 'train', num_points = 4096): # va specificato il numero di punti anche alla riga 86?
         if partition == 'train':
            self.data, self.label = configurazioni_train, msd_train
         else:
@@ -68,11 +68,11 @@ class Dataset(object): #Is object really useful?
     def X(self):
         return self._values
     
-    @propertyi #Label
+    @property #Label, what we have to predict from the features
     def y(self):
         return self._label
 
-    def shuffle(self, seed=None):
+    def shuffle(self, seed = None):
         if seed is not None:
             np.random.seed(seed)
         shuffle_indices = np.arange(self.__len__())
@@ -172,7 +172,7 @@ def edge_conv(points, features, num_points, K, channels, with_bn=True, activatio
             return sc + fts
 
 
-def _DGCNN_base(points, features=None, mask=None, setting=None, name='DGCNN_SG'):
+def _DGCNN_base(points, features=None, mask = None, setting = None, name = 'DGCNN_SG'):
     # points : (N, P, C_coord)
     # features:  (N, P, C_features), optional
     # mask: (N, P, 1), optional
@@ -279,7 +279,7 @@ save_dir = 'model_checkpoints'
 #model_name = 'DGCNN_modelbest.h5'
 #model_name = 'DGCNN_k10_e30_bs32_cpMax-epoch{epoch:02d}-mae{val_mae:.2f}.h5'
 
-model_name = 'DGCNN_k10_e30_bs32_cpMax.h5'
+model_name = 'DGCNN_k20_e30_bs32_cpMax.h5'
 
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
@@ -312,7 +312,7 @@ history = model.fit(train.X, train.y,
 
 #model.load_weights("model_checkpoints/DGCNN_modelbest.h5")
 
-model.load_weights("model_checkpoints/DGCNN_k10_e30_bs32_cpMax.h5")
+model.load_weights("model_checkpoints/DGCNN_k20_e30_bs32_cpMax.h5")
 #model.load_weights("model_checkpoints/prova.h5")
 
 test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1) #Restituisce prima la loss e poi le metrics definite in model.compile
