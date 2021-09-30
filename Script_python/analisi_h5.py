@@ -4,10 +4,13 @@ from tensorflow import keras
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+#Comment the line below to use the GPU
+tf.config.set_visible_devices([], 'GPU')
+
 #import matplotlib.pyplot as plt
 #import numpy as np
 #
-model_name = 'DGCNN_k20_e30_bs16.h5'
+model_name = 'DGCNN_k10_e30_bs32_cpMax.h5'
 #
 #
 #with h5py.File(filename, "r") as f:
@@ -62,7 +65,7 @@ class Dataset(object): #Is object really useful?
     def y(self):
         return self._label
 
-    def shuffle(self, seed=None):
+    def shuffle(self, seed = None):
         if seed is not None:
             np.random.seed(seed)
         shuffle_indices = np.arange(self.__len__())
@@ -99,10 +102,10 @@ test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1)
 predictions = model.predict(test.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction, predicted value for new unlabeled data (or pretend that you do not have a label)
 
 
-np.savetxt('test_loss.txt', test_loss)
-np.savetxt('test_mae.txt', test_mae)
-np.save('predictions.npy', predictions)
-np.save('test.y.npy', test.y)
+np.save('test_loss_k10_e30_bs32_cpMax.npy', test_loss)
+np.save('test_mae_k10_e30_bs32_cpMax.npy', test_mae)
+np.save('predictions_k10_e30_bs32_cpMax.npy', predictions)
+np.save('test_y_k10_e30_bs32_cpMax.npy', test.y)
 
 
 # perche' 1600,3 ? valore del msd nel punto 199 troppo basso
