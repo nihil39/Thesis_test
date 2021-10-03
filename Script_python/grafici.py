@@ -37,7 +37,7 @@ gaussiana = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
 
 plt.plot(bins, gaussiana, linewidth = 2, color = 'b')
 
-plt.title('test.y (label) - predictions\n μ = 0, σ = 0.045', loc = 'center', fontsize = 14, c='black')
+plt.title(f'test.y (label) - predictions\n μ = {mu}, σ = {sigma}', loc = 'center', fontsize = 14)
 
 plt.show()
 
