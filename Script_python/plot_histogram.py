@@ -54,8 +54,6 @@ ax6.set_title('t = 199')
 #ax2.xticks(bins, rotation = 90)
 #ax3.xticks(bins, rotation = 90)
 
-
-#plt.title('T = 0.44, P = 2.93', fontsize = 14, c='black')
 plt.show()
 
 
