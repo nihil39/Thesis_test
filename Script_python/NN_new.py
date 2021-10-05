@@ -318,6 +318,12 @@ model.load_weights("model_checkpoints/DGCNN_k20_e30_bs32_cpMax.h5")
 test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1) #Restituisce prima la loss e poi le metrics definite in model.compile
 
 predictions =  model.predict(test.X, verbose = 1) # in output qualcosa con la forma di test.y
+
+np.save('test_loss_k10_e30_bs32_cpMax.npy', test_loss)
+np.save('test_mae_k10_e30_bs32_cpMax.npy', test_mae)
+np.save('predictions_k10_e30_bs32_cpMax.npy', predictions)
+np.save('test_y_k10_e30_bs32_cpMax.npy', test.y)
+
 #separare i tre singoli punti del msd
 
 ### PLOT ###
