@@ -23,7 +23,7 @@ fig = plt.figure(figsize=(16,6))
 
 n , bins, patches = plt.hist(differenza[:,2], bins = 'auto', color = 'crimson', ec = 'skyblue', density = True) 
 
-# [:,2] tutto il primo asse, solo il campo 2 del secondo  
+# [:,2] tutto il primo asse, solo il campo 2 del secondo. Il secondo campo sono i tre tempi a cui è stato predetto il msd 
 
 # Density parameter, which normalizes bin heights so that the integral of the histogram is 1. The resulting histogram is an approximation of the probability density function.
 
