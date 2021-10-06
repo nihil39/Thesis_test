@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp
+from scipy import stats
 
 msd_T044 = np.load('msd_completo_T044_P293.npy')
 msd_T047 = np.load('msd_completo_T047_P224.npy')
