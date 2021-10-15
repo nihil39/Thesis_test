@@ -32,7 +32,7 @@ ax3 = fig.add_subplot(2, 2, 3)
 ax4 = fig.add_subplot(2, 2, 4)
 
 
-fig.suptitle('test_y (label) - predictions, Density = True', fontsize = 14, c='blue')
+fig.suptitle('test_y (label) - predictions, Density = True', fontsize = 14, c='darkgrey')
 
 # parametri gaussiana
 #mu = 0
@@ -46,10 +46,10 @@ fig.suptitle('test_y (label) - predictions, Density = True', fontsize = 14, c='b
 # algoritmi per scegliere come calcolare i bin: 'auto', 'sturges', 'fd', 'doane', 'scott', 'rice' or 'sqrt'
 
 #fig = plt.figure(figsize=(16,6))
-n, bins1, patches = ax1.hist(differenza1[:,2], bins = 'auto', color = 'crimson', ec = 'skyblue', density = True)
-n, bins2, patches = ax2.hist(differenza2[:,2], bins = 'auto', color = 'green', ec = 'skyblue', density = True)
-n, bins3, patches = ax3.hist(differenza3[:,2], bins = 'auto', color = 'blue', ec = 'skyblue', density = True)
-n, bins4, patches = ax4.hist(differenza4[:,2], bins = 'auto', color = 'magenta', ec = 'skyblue', density = True)
+n, bins1, patches = ax1.hist(differenza1[:,2], bins = 'auto', color = 'tab:blue', ec = 'skyblue', density = True)
+n, bins2, patches = ax2.hist(differenza2[:,2], bins = 'auto', color = 'mediumseagreen', ec = 'skyblue', density = True)
+n, bins3, patches = ax3.hist(differenza3[:,2], bins = 'auto', color = 'orange', ec = 'skyblue', density = True)
+n, bins4, patches = ax4.hist(differenza4[:,2], bins = 'auto', color = 'tab:red', ec = 'skyblue', density = True)
 
 # [:,2] tutto il primo asse, solo il campo 2 del secondo. il secondo campo sono i tre tempi a cui è stato predetto il msd 
 
@@ -85,7 +85,7 @@ ax3.text(0.1, 0.8, f' μ = {mu3:.4f}\nσ = {sigma3:.4f} ', fontsize = 10,  trans
 ax4.set_title(f'T = 0.56 P = 0.17')
 ax4.text(0.1, 0.8, f' μ = {mu4:.4f}\nσ = {sigma4:.4f} ', fontsize = 10,  transform = ax4.transAxes)
 
-ax1.plot(bins1, best_fit_line1)
+ax1.plot(bins1, best_fit_line1, color = 'darkgrey')
 ax2.plot(bins2, best_fit_line2)
 ax3.plot(bins3, best_fit_line3)
 ax4.plot(bins4, best_fit_line4)
