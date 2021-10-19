@@ -68,7 +68,7 @@ mu2, sigma2 = sp.stats.norm.fit(differenza2[:,2])
 mu3, sigma3 = sp.stats.norm.fit(differenza3[:,2])
 mu4, sigma4 = sp.stats.norm.fit(differenza4[:,2])
 
-best_fit_line1 = sp.stats.norm.pdf(bins1, mu1, sigma1)
+best_fit_line1 = sp.stats.norm.pdf(bins1, mu1, sigma1, color='black')
 best_fit_line2 = sp.stats.norm.pdf(bins2, mu2, sigma2)
 best_fit_line3 = sp.stats.norm.pdf(bins3, mu3, sigma3)
 best_fit_line4 = sp.stats.norm.pdf(bins4, mu4, sigma4)
@@ -85,7 +85,7 @@ ax3.text(0.1, 0.8, f' μ = {mu3:.4f}\nσ = {sigma3:.4f} ', fontsize = 10,  trans
 ax4.set_title(f'T = 0.56 P = 0.17')
 ax4.text(0.1, 0.8, f' μ = {mu4:.4f}\nσ = {sigma4:.4f} ', fontsize = 10,  transform = ax4.transAxes)
 
-ax1.plot(bins1, best_fit_line1, color = 'darkgrey')
+ax1.plot(bins1, best_fit_line1)
 ax2.plot(bins2, best_fit_line2)
 ax3.plot(bins3, best_fit_line3)
 ax4.plot(bins4, best_fit_line4)

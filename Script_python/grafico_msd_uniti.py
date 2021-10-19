@@ -104,7 +104,3 @@ ax2.set_yscale('log')
 
 plt.show()
 
-
-
-
-
