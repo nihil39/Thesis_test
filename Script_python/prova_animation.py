@@ -36,24 +36,19 @@ for time in range(0,199):
     filenames.append(filename)
     fig.savefig(f'./{time}.png')
     plt.cla() # clears axes indexes
-#del tempo
+
+plt.close()
+
+gif_name = 'prova3.gif'
 
 # Build GIF
-with imageio.get_writer('mygif_tot.gif', mode='I') as writer:
+with imageio.get_writer(gif_name, mode = 'I') as writer:
     for filename in filenames:
         image = imageio.imread(filename)
         writer.append_data(image)
 
-# Remove files
+os.system(f'gifsicle -O2 --colors 64 {gif_name} -o {gif_name}') # https://www.lcdf.org/gifsicle/ , used to reduce gif size, --lossy=% to use a lossy compression
+
+# Remove the images used for gif creation
 for filename in set(filenames):
     os.remove(filename)
-
-#tempo = 150
-#ax1.hist(array_msd_T044[:, tempo, msdA], color = 'blue', ec = 'tab:blue', **kwargs_solo_contorno, label = "T = 0.44, P = 2.93") 
-#ax1.legend()
-##plt.draw()
-#fig.savefig(f'./{tempo}.png')
-
-#ax1.set_title(f'T = 0.44 P = 2.93')
-
-#plt.show()
