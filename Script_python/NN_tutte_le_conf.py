@@ -345,7 +345,8 @@ train.shuffle()
 history = model.fit(train.X, train.y,
           batch_size = batch_size,
           epochs = epochs,
-          validation_data = (test.X, test.y),
+          #validation_data = (test.X, test.y),
+          validation_split = 0.2,
           shuffle = True,
           callbacks = callbacks)
 
