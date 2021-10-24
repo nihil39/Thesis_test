@@ -212,7 +212,7 @@ def edge_conv(points, features, num_points, K, channels, with_bn=True, activatio
             return sc + fts
 
 
-def _DGCNN_base(points, features = None, mask = None, setting = None, name = 'DGCNN_SG'):
+def _DGCNN_base(points, features=None, mask = None, setting = None, name = 'DGCNN_SG'):
     # points : (N, P, C_coord)
     # features:  (N, P, C_features), optional
     # mask: (N, P, 1), optional
@@ -252,6 +252,7 @@ def _DGCNN_base(points, features = None, mask = None, setting = None, name = 'DG
         else:
             return pool
 
+
 class _DotDict:
     pass
 
@@ -289,7 +290,7 @@ def get_DGCNN(num_classes, input_shapes):
 
     return keras.Model(inputs=[points, features, mask], outputs=outputs, name='DGCNN_SG')
 
-num_classes = 2 # Classi in output, numero di punti da predire?
+num_classes = 2 # Classi in output, numero di punti da predirre?
 input_shapes = {k:train[k].shape[1:] for k in train.X}
 print(input_shapes)
 model = get_DGCNN(num_classes, input_shapes)
@@ -345,8 +346,8 @@ train.shuffle()
 history = model.fit(train.X, train.y,
           batch_size = batch_size,
           epochs = epochs,
-          #validation_data = (test.X, test.y),
-          validation_split = 0.2,
+          #validation_data = (test_T044.X, test_T044.y),
+          validation_split = 0.2, 
           shuffle = True,
           callbacks = callbacks)
 
@@ -357,12 +358,30 @@ model.load_weights("model_checkpoints/DGCNN_k20_e30_bs16_cpMax.h5")
 
 test_loss, test_mae = model.evaluate(test.X, test.y, verbose = 1) #Restituisce prima la loss e poi le metrics definite in model.compile
 
-predictions = model.predict(test.X, verbose = 1) # in output qualcosa con la forma di test.y
+#predictions =  model.predict(test.X, verbose = 1) # in output qualcosa con la forma di test.y
 
-np.save('test_loss_k20_e30_bs16_cpMax.npy', test_loss)
-np.save('test_mae_k20_e30_bs16_cpMax.npy', test_mae)
-np.save('predictions_k20_e30_bs16_cpMax.npy', predictions)
-np.save('test_y_k20_e30_bs16_cpMax.npy', test.y)
+predictions_T044 = model.predict(test_T044.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction, predicted value for new unlabeled data (or pretend that you do not have a label)
+
+predictions_T047 = model.predict(test_T047.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction, predicted value for new unlabeled data (or pretend that you do not have a label)
+
+predictions_T050 = model.predict(test_T050.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction, predicted value for new unlabeled data (or pretend that you do not have a label)
+
+predictions_T056 = model.predict(test_T056.X, verbose = 1) #prediction vs test.y, istogramma di test.y - prediction, predicted value for new unlabeled data (or pretend that you do not have a label)
+
+#np.save('test_loss_k20_e30_bs16_cpMax.npy', test_loss)
+#np.save('test_mae_k20_e30_bs16_cpMax.npy', test_mae)
+
+np.save('predictions_k20_e30_bs16_cpMax_T044.npy', predictions_T044)
+np.save('test_y_k20_e30_bs_16_cpMax_T044.npy', test_T044.y)
+
+np.save('predictions_k20_e30_bs16_cpMax_T047.npy', predictions_T047)
+np.save('test_y_k20_e30_bs_16_cpMax_T047.npy', test_T047.y)
+
+np.save('predictions_k20_e30_bs16_cpMax_T050.npy', predictions_T050)
+np.save('test_y_k20_e30_bs_16_cpMax_T050.npy', test_T050.y)
+
+np.save('predictions_k20_e30_bs16_cpMax_T056.npy', predictions_T056)
+np.save('test_y_k20_e30_bs_16_cpMax_T056.npy', test_T056.y)
 
 ### PLOT ###
 # Salvare history, mae, val mae, loss, val loss in un altro array
@@ -389,7 +408,6 @@ plt.title('Training and Validation MAE')
 
 plt.savefig('TaV_Loss_MAE_k20_e30_bs16_cpMax.pdf')
 
-#plt.savefig('prova1.pdf')
 ###################
 
 #from sklearn.metrics import classification_report, confusion_matrix
