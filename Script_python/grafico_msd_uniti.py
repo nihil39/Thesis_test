@@ -15,11 +15,18 @@ array_msd_T047_medie = np.load('msd_T047_P224_medie.npy')
 array_msd_T050_medie = np.load('msd_T050_P155_medie.npy')
 array_msd_T056_medie = np.load('msd_T056_P017_medie.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
 
-predizioni_msd_T044 = np.load('predictions_k20_e30_bs16_cpMax_T044_P293.npy')
-predizioni_msd_T047 = np.load('predictions_k20_e30_bs16_cpMax_T047_P224.npy')
-predizioni_msd_T050 = np.load('predictions_k20_e30_bs16_cpMax_T050_P155.npy')
-predizioni_msd_T056 = np.load('predictions_k20_e30_bs16_cpMax_T056_P017.npy')
-predizioni_all_conf = np.load('predictions_all_conf_k20_e30_bs16_cpMax.npy')
+
+#array_msd_T052_medie = np.load('msd_T052_P109_NT_medie.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
+
+#predizioni_msd_T044 = np.load('predictions_k20_e30_bs16_cpMax_T044_P293.npy')
+#predizioni_msd_T047 = np.load('predictions_k20_e30_bs16_cpMax_T047_P224.npy')
+#predizioni_msd_T050 = np.load('predictions_k20_e30_bs16_cpMax_T050_P155.npy')
+#predizioni_msd_T056 = np.load('predictions_k20_e30_bs16_cpMax_T056_P017.npy')
+
+predizioni_msd_T044_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e30_bs16_cpMax_T044.npy')
+predizioni_msd_T047_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e30_bs16_cpMax_T047.npy')
+predizioni_msd_T050_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e30_bs16_cpMax_T050.npy')
+predizioni_msd_T056_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e30_bs16_cpMax_T056.npy')
 
 fig = plt.figure()
 fig.suptitle('MSD mean', fontsize = 14, c = 'darkgrey')
@@ -46,45 +53,75 @@ ax2.plot(array_msd_T047_medie[:, 0], array_msd_T047_medie[:, msdA], color = 'med
 ax2.plot(array_msd_T050_medie[:, 0], array_msd_T050_medie[:, msdA], color = 'orange', label = "T = 0.50, P = 1.55")
 ax2.plot(array_msd_T056_medie[:, 0], array_msd_T056_medie[:, msdA], color = 'tab:red', label = "T = 0.56, P = 0.17")
 
+#ax2.plot(array_msd_T052_medie[:, 0], array_msd_T052_medie[:, msdA], color = 'black', label = "T = 0.52, P = 1.09")
 
 # 0.005, 1.63, 500 sono i valori temporali a cui e' stata fatta la predizione dalla NN, corrispondono a 0, 100 e 199
 
 ## Predizioni medie singole configurazioni
 #T = 0.44, P = 2.93
 
-ax2.plot(0.005, predizioni_msd_T044[:,0].mean(), color = 'tab:blue', marker = 'o')
-ax2.plot(1.63 , predizioni_msd_T044[:,1].mean(), color = 'tab:blue', marker = 'o') 
-ax2.plot(500  , predizioni_msd_T044[:,2].mean(), color = 'tab:blue', marker = 'o')
-##
-
-#T = 0.47, P = 2.24
-
-ax2.plot(0.005, predizioni_msd_T047[:,0].mean(), color = 'mediumseagreen', marker = 's')
-ax2.plot(1.63 , predizioni_msd_T047[:,1].mean(), color = 'mediumseagreen', marker = 's' )
-ax2.plot(500  , predizioni_msd_T047[:,2].mean(), color = 'mediumseagreen', marker = 's' )
-
-#T = 0.50, P = 1.55
-
-ax2.plot(0.005, predizioni_msd_T050[:,0].mean(), color = 'orange', marker = 'p')
-ax2.plot(1.63 , predizioni_msd_T050[:,1].mean(), color = 'orange', marker = 'p')
-ax2.plot(500  , predizioni_msd_T050[:,2].mean(), color = 'orange', marker = 'p' )
-
-#T = 0.56, P = 0.17
-
-ax2.plot(0.005, predizioni_msd_T056[:,0].mean(), color = 'tab:red', marker = '^')
-ax2.plot(1.63 , predizioni_msd_T056[:,1].mean(), color = 'tab:red', marker = '^')
-ax2.plot(500  , predizioni_msd_T056[:,2].mean(), color = 'tab:red', marker = '^')
-
-
-ax2.plot(0.005, predizioni_all_conf[:,0].mean(), color = 'slategray', marker = 'H', markersize = 10, label = "Predictions all conf")
-ax2.plot(1.63 , predizioni_all_conf[:,1].mean(), color = 'slategray', marker = 'H', markersize = 10)
-ax2.plot(500  , predizioni_all_conf[:,2].mean(), color = 'slategray', marker = 'H', markersize = 10)
+#ax2.plot(0.005, predizioni_msd_T044[:,0].mean(), color = 'tab:blue', marker = 'o')
+#ax2.plot(1.63 , predizioni_msd_T044[:,1].mean(), color = 'tab:blue', marker = 'o') 
+#ax2.plot(500  , predizioni_msd_T044[:,2].mean(), color = 'tab:blue', marker = 'o')
+###
+#
+##T = 0.47, P = 2.24
+#
+#ax2.plot(0.005, predizioni_msd_T047[:,0].mean(), color = 'mediumseagreen', marker = 's')
+#ax2.plot(1.63 , predizioni_msd_T047[:,1].mean(), color = 'mediumseagreen', marker = 's' )
+#ax2.plot(500  , predizioni_msd_T047[:,2].mean(), color = 'mediumseagreen', marker = 's' )
+#
+##T = 0.50, P = 1.55
+#
+#ax2.plot(0.005, predizioni_msd_T050[:,0].mean(), color = 'orange', marker = 'p')
+#ax2.plot(1.63 , predizioni_msd_T050[:,1].mean(), color = 'orange', marker = 'p')
+#ax2.plot(500  , predizioni_msd_T050[:,2].mean(), color = 'orange', marker = 'p' )
+#
+##T = 0.56, P = 0.17
+#
+#ax2.plot(0.005, predizioni_msd_T056[:,0].mean(), color = 'tab:red', marker = '^')
+#ax2.plot(1.63 , predizioni_msd_T056[:,1].mean(), color = 'tab:red', marker = '^')
+#ax2.plot(500  , predizioni_msd_T056[:,2].mean(), color = 'tab:red', marker = '^')
+#
+#
+#ax2.plot(0.005, predizioni_all_conf[:,0].mean(), color = 'slategray', marker = 'H', markersize = 10, label = "Predictions all conf")
+#ax2.plot(1.63 , predizioni_all_conf[:,1].mean(), color = 'slategray', marker = 'H', markersize = 10)
+#ax2.plot(500  , predizioni_all_conf[:,2].mean(), color = 'slategray', marker = 'H', markersize = 10)
 
 ## Predizioni array completo
 #ax2.plot(0, 0.00060954876, 'ro')
 #ax2.plot(100, 0.069784194, 'g*')
 #ax2.plot(199, 8.165215, 'ro')
 ##
+
+# ALL CONF
+#Predizioni con la rete allenata su tutte le confgurazioni, sono solo due punti
+#T = 0.44, P = 2.93
+ax2.plot(1.63 , predizioni_msd_T044_all_conf[:,0].mean(), color = 'tab:blue', marker = 'o') 
+ax2.plot(500  , predizioni_msd_T044_all_conf[:,1].mean(), color = 'tab:blue', marker = 'o')
+###
+#
+##T = 0.47, P = 2.24
+#
+ax2.plot(1.63 , predizioni_msd_T047_all_conf[:,0].mean(), color = 'mediumseagreen', marker = 's' )
+ax2.plot(500  , predizioni_msd_T047_all_conf[:,1].mean(), color = 'mediumseagreen', marker = 's' )
+#
+##T = 0.50, P = 1.55
+#
+ax2.plot(1.63 , predizioni_msd_T050_all_conf[:,0].mean(), color = 'orange', marker = 'p')
+ax2.plot(500  , predizioni_msd_T050_all_conf[:,1].mean(), color = 'orange', marker = 'p' )
+#
+##T = 0.56, P = 0.17
+#
+ax2.plot(1.63 , predizioni_msd_T056_all_conf[:,0].mean(), color = 'tab:red', marker = '^')
+ax2.plot(500  , predizioni_msd_T056_all_conf[:,1].mean(), color = 'tab:red', marker = '^')
+#
+#
+#ax2.plot(1.63 , predizioni_all_conf[:,1].mean(), color = 'slategray', marker = 'H', markersize = 10)
+#ax2.plot(500  , predizioni_all_conf[:,2].mean(), color = 'slategray', marker = 'H', markersize = 10)
+
+## Predizioni array completo
+#ax2.plot(0, 0.00060954876, 'ro')
 
 
 #ax1.set_title(f'One configuration')
