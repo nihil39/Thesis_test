@@ -5,16 +5,17 @@ import matplotlib.pyplot as plt
 #import scipy as sp
 import random
 
-array_msd_T044 = np.load('msd_completo_T044_P293.npy')
-array_msd_T047 = np.load('msd_completo_T047_P224.npy')
-array_msd_T050 = np.load('msd_completo_T050_P155.npy')
-array_msd_T056 = np.load('msd_completo_T056_P017.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
+#array_msd_T044 = np.load('msd_completo_T044_P293.npy')
+#array_msd_T047 = np.load('msd_completo_T047_P224.npy')
+#array_msd_T050 = np.load('msd_completo_T050_P155.npy')
+#array_msd_T056 = np.load('msd_completo_T056_P017.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
 
 array_msd_T044_medie = np.load('msd_T044_P293_medie.npy')
 array_msd_T047_medie = np.load('msd_T047_P224_medie.npy')
 array_msd_T050_medie = np.load('msd_T050_P155_medie.npy')
 array_msd_T056_medie = np.load('msd_T056_P017_medie.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
 
+array_msd_T052_NT_medie = np.load('msd_T052_P109_NT_medie.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
 
 #array_msd_T052_medie = np.load('msd_T052_P109_NT_medie.npy') #[configurazioni, (questo campo deve scorrere coi :),  0 = tempi / 1 = msdA / 2 = msdB]
 
@@ -28,8 +29,11 @@ predizioni_msd_T047_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e
 predizioni_msd_T050_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e30_bs16_cpMax_T050.npy')
 predizioni_msd_T056_all_conf = np.load('../DGCNN/Tutte_le_conf/predictions_k20_e30_bs16_cpMax_T056.npy')
 
+predizioni_msd_T052_NT_all_conf = np.load('../DGCNN/Tutte_T052/predictions_k20_e30_bs16_cpMax_T052.npy')
+
 fig = plt.figure()
-fig.suptitle('MSD mean', fontsize = 14, c = 'darkgrey')
+fig.suptitle('MSD mean and predictions on the new conf T = 0.52, P = 1.09\nDGCNN trained on the other four configurations', fontsize = 14, c = 'darkgrey')
+
 
 #ax1 = fig.add_subplot(1, 2, 1)
 #ax2 = fig.add_subplot(1, 2, 2)
@@ -53,11 +57,13 @@ ax2.plot(array_msd_T047_medie[:, 0], array_msd_T047_medie[:, msdA], color = 'med
 ax2.plot(array_msd_T050_medie[:, 0], array_msd_T050_medie[:, msdA], color = 'orange', label = "T = 0.50, P = 1.55")
 ax2.plot(array_msd_T056_medie[:, 0], array_msd_T056_medie[:, msdA], color = 'tab:red', label = "T = 0.56, P = 0.17")
 
+ax2.plot(array_msd_T052_NT_medie[:, 0], array_msd_T052_NT_medie[:, msdA], color = 'lightcoral', label = "T = 0.52, P = 1.09")
+
 #ax2.plot(array_msd_T052_medie[:, 0], array_msd_T052_medie[:, msdA], color = 'black', label = "T = 0.52, P = 1.09")
 
 # 0.005, 1.63, 500 sono i valori temporali a cui e' stata fatta la predizione dalla NN, corrispondono a 0, 100 e 199
 
-## Predizioni medie singole configurazioni
+## Predizioni medie singole configurazioni, rete allenata su ognuna delle singole configurazioni
 #T = 0.44, P = 2.93
 
 #ax2.plot(0.005, predizioni_msd_T044[:,0].mean(), color = 'tab:blue', marker = 'o')
@@ -88,40 +94,35 @@ ax2.plot(array_msd_T056_medie[:, 0], array_msd_T056_medie[:, msdA], color = 'tab
 #ax2.plot(1.63 , predizioni_all_conf[:,1].mean(), color = 'slategray', marker = 'H', markersize = 10)
 #ax2.plot(500  , predizioni_all_conf[:,2].mean(), color = 'slategray', marker = 'H', markersize = 10)
 
-## Predizioni array completo
-#ax2.plot(0, 0.00060954876, 'ro')
-#ax2.plot(100, 0.069784194, 'g*')
-#ax2.plot(199, 8.165215, 'ro')
-##
 
 # ALL CONF
-#Predizioni con la rete allenata su tutte le confgurazioni, sono solo due punti
+#Predizioni con la rete allenata su tutte le configurazioni, sono solo due punti
 #T = 0.44, P = 2.93
-ax2.plot(1.63 , predizioni_msd_T044_all_conf[:,0].mean(), color = 'tab:blue', marker = 'o') 
-ax2.plot(500  , predizioni_msd_T044_all_conf[:,1].mean(), color = 'tab:blue', marker = 'o')
+#ax2.plot(1.63 , predizioni_msd_T044_all_conf[:,0].mean(), color = 'tab:blue', marker = 'o') 
+#ax2.plot(500  , predizioni_msd_T044_all_conf[:,1].mean(), color = 'tab:blue', marker = 'o')
 ###
 #
 ##T = 0.47, P = 2.24
 #
-ax2.plot(1.63 , predizioni_msd_T047_all_conf[:,0].mean(), color = 'mediumseagreen', marker = 's' )
-ax2.plot(500  , predizioni_msd_T047_all_conf[:,1].mean(), color = 'mediumseagreen', marker = 's' )
+#ax2.plot(1.63 , predizioni_msd_T047_all_conf[:,0].mean(), color = 'mediumseagreen', marker = 's' )
+#ax2.plot(500  , predizioni_msd_T047_all_conf[:,1].mean(), color = 'mediumseagreen', marker = 's' )
+##
+###T = 0.50, P = 1.55
+##
+#ax2.plot(1.63 , predizioni_msd_T050_all_conf[:,0].mean(), color = 'orange', marker = 'p')
+#ax2.plot(500  , predizioni_msd_T050_all_conf[:,1].mean(), color = 'orange', marker = 'p' )
+##
+###T = 0.56, P = 0.17
+##
+#ax2.plot(1.63 , predizioni_msd_T056_all_conf[:,0].mean(), color = 'tab:red', marker = '^')
+#ax2.plot(500  , predizioni_msd_T056_all_conf[:,1].mean(), color = 'tab:red', marker = '^')
+##
+##
 #
-##T = 0.50, P = 1.55
-#
-ax2.plot(1.63 , predizioni_msd_T050_all_conf[:,0].mean(), color = 'orange', marker = 'p')
-ax2.plot(500  , predizioni_msd_T050_all_conf[:,1].mean(), color = 'orange', marker = 'p' )
-#
-##T = 0.56, P = 0.17
-#
-ax2.plot(1.63 , predizioni_msd_T056_all_conf[:,0].mean(), color = 'tab:red', marker = '^')
-ax2.plot(500  , predizioni_msd_T056_all_conf[:,1].mean(), color = 'tab:red', marker = '^')
-#
-#
-#ax2.plot(1.63 , predizioni_all_conf[:,1].mean(), color = 'slategray', marker = 'H', markersize = 10)
-#ax2.plot(500  , predizioni_all_conf[:,2].mean(), color = 'slategray', marker = 'H', markersize = 10)
-
-## Predizioni array completo
-#ax2.plot(0, 0.00060954876, 'ro')
+##Predizioni rete allenata sulle altre 4 configurazioni su questa configurazione 
+## T = 0.52, P = 1.09
+ax2.plot(1.63 , predizioni_msd_T052_NT_all_conf[:,0].mean(), color = 'lightcoral', marker = '8')
+ax2.plot(500  , predizioni_msd_T052_NT_all_conf[:,1].mean(), color = 'lightcoral', marker = '8')
 
 
 #ax1.set_title(f'One configuration')
@@ -139,5 +140,6 @@ ax2.set_ylabel(r'$\langle r^2(t) \rangle$', fontsize = 14) #r' ' per scrivere in
 ax2.set_xscale('log')
 ax2.set_yscale('log')
 
+ax2.grid(linestyle = '--', linewidth = 0.5)
 plt.show()
 
