@@ -57,14 +57,22 @@ ax2.plot(array_msd_T047_medie[:, 0], array_msd_T047_medie[:, msdA], color = 'med
 ax2.plot(array_msd_T050_medie[:, 0], array_msd_T050_medie[:, msdA], color = 'orange', label = "T = 0.50, P = 1.55")
 ax2.plot(array_msd_T056_medie[:, 0], array_msd_T056_medie[:, msdA], color = 'tab:red', label = "T = 0.56, P = 0.17")
 
+#t = 100
 mu_T044_t_100, sigma_T044_t_100 = sp.stats.norm.fit(predizioni_msd_T044_all_conf[:,0])
 mu_T047_t_100, sigma_T047_t_100 = sp.stats.norm.fit(predizioni_msd_T047_all_conf[:,0])
+
 mu_T050_t_100, sigma_T050_t_100 = sp.stats.norm.fit(predizioni_msd_T050_all_conf[:,0])
+mu_T050_t_100_no_tail, sigma_T050_t_100_no_tail = sp.stats.norm.fit(predizioni_msd_T050_all_conf[:,0])
+
 mu_T056_t_100, sigma_T056_t_100 = sp.stats.norm.fit(predizioni_msd_T056_all_conf[:,0])
 
+#t = 199
 mu_T044_t_199, sigma_T044_t_199 = sp.stats.norm.fit(predizioni_msd_T044_all_conf[:,1])
 mu_T047_t_199, sigma_T047_t_199 = sp.stats.norm.fit(predizioni_msd_T047_all_conf[:,1])
+
 mu_T050_t_199, sigma_T050_t_199 = sp.stats.norm.fit(predizioni_msd_T050_all_conf[:,1])
+mu_T050_t_199_no_tail, sigma_T050_t_199_no_tail = sp.stats.norm.fit(predizioni_msd_T050_all_conf[:,1])
+
 mu_T056_t_199, sigma_T056_t_199 = sp.stats.norm.fit(predizioni_msd_T056_all_conf[:,1])
 
 # ALL CONF
