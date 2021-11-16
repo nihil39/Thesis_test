@@ -6,18 +6,18 @@ from scipy import stats
 #from matplotlib.ticker import AutoMinorLocator
 #from matplotlib import gridspec
 
-predizioni_T044_T045 = np.load('predictions_k20_e30_bs16_cpMax_T044_Training_T045_test.npy')
-test_y_T044_T045 = np.load('test_y_k20_e30_bs_16_cpMax_T044_Training_T045_test.npy')
+predizioni_T047_T044 = np.load('predictions_k20_e30_bs16_cpMax_T044_Training_T045_test.npy')
+test_y_T047_T044 = np.load('test_y_k20_e30_bs_16_cpMax_T044_Training_T045_test.npy')
 
-predizioni_T044_T047 = np.load('predictions_k20_e30_bs16_cpMax_T044_Training_T047_test.npy')
-test_y_T044_T047 = np.load('test_y_k20_e30_bs_16_cpMax_T044_Training_T047_test.npy')
+predizioni_T047_T045 = np.load('predictions_k20_e30_bs16_cpMax_T044_Training_T047_test.npy')
+test_y_T047_T045 = np.load('test_y_k20_e30_bs_16_cpMax_T044_Training_T047_test.npy')
 
-predizioni_T044_T049 = np.load('predictions_k20_e30_bs16_cpMax_T044_Training_T049_test.npy')
-test_y_T044_T049 = np.load('test_y_k20_e30_bs_16_cpMax_T044_Training_T049_test.npy')
+predizioni_T047_T049 = np.load('predictions_k20_e30_bs16_cpMax_T044_Training_T049_test.npy')
+test_y_T047_T049 = np.load('test_y_k20_e30_bs_16_cpMax_T044_Training_T049_test.npy')
 
-differenza_T044_T045 = np.subtract(test_y_T044_T045, predizioni_T044_T045)
-differenza_T044_T047 = np.subtract(test_y_T044_T047, predizioni_T044_T047)
-differenza_T044_T049 = np.subtract(test_y_T044_T049, predizioni_T044_T049)
+differenza_T047_T044 = np.subtract(test_y_T047_T044, predizioni_T047_T044)
+differenza_T047_T045 = np.subtract(test_y_T047_T045, predizioni_T047_T045)
+differenza_T047_T049 = np.subtract(test_y_T047_T049, predizioni_T047_T049)
 
 fig = plt.figure()
 
@@ -44,14 +44,14 @@ fig.suptitle('Trained on T = 0.44, P = 2.93 conf, predictions on other conf\ntes
 #fig = plt.figure(figsize=(16,6))
 
 
-n, bins_T044_T045_t100, patches = ax1.hist(differenza_T044_T045[:,0], bins = 'auto', color = 'xkcd:dusty red', ec = 'skyblue', density = True) # t = 100 [:,0]
-n, bins_T044_T045_t199, patches = ax2.hist(differenza_T044_T045[:,1], bins = 'auto', color = 'xkcd:algae', ec = 'skyblue', density = True) # t = 199 [:,1]
+n, bins_T047_T044_t100, patches = ax1.hist(differenza_T047_T044[:,0], bins = 'auto', color = 'xkcd:dusty red', ec = 'skyblue', density = True) # t = 100 [:,0]
+n, bins_T047_T044_t199, patches = ax2.hist(differenza_T047_T044[:,1], bins = 'auto', color = 'xkcd:algae', ec = 'skyblue', density = True) # t = 199 [:,1]
 
-n, bins_T044_T047_t100, patches = ax3.hist(differenza_T044_T047[:,0], bins = 'auto', color = 'xkcd:dusty red', ec = 'skyblue', density = True) # t = 100 [:,0]
-n, bins_T044_T047_t199, patches = ax4.hist(differenza_T044_T047[:,1], bins = 'auto', color = 'xkcd:algae', ec = 'skyblue', density = True) # t = 199 [:,1]
+n, bins_T047_T045_t100, patches = ax3.hist(differenza_T047_T045[:,0], bins = 'auto', color = 'xkcd:dusty red', ec = 'skyblue', density = True) # t = 100 [:,0]
+n, bins_T047_T045_t199, patches = ax4.hist(differenza_T047_T045[:,1], bins = 'auto', color = 'xkcd:algae', ec = 'skyblue', density = True) # t = 199 [:,1]
 
-n, bins_T044_T049_t100, patches = ax5.hist(differenza_T044_T049[:,0], bins = 'auto', color = 'xkcd:dusty red', ec = 'skyblue', density = True) # t = 100 [:,0]
-n, bins_T044_T049_t199, patches = ax6.hist(differenza_T044_T049[:,1], bins = 'auto', color = 'xkcd:algae', ec = 'skyblue', density = True) # t = 199 [:,1]
+n, bins_T047_T049_t100, patches = ax5.hist(differenza_T047_T049[:,0], bins = 'auto', color = 'xkcd:dusty red', ec = 'skyblue', density = True) # t = 100 [:,0]
+n, bins_T047_T049_t199, patches = ax6.hist(differenza_T047_T049[:,1], bins = 'auto', color = 'xkcd:algae', ec = 'skyblue', density = True) # t = 199 [:,1]
 
 # [:,2] tutto il primo asse, solo il campo 1 del secondo. il secondo campo sono i due tempi a cui è stato predetto il msd 
 
@@ -65,66 +65,66 @@ n, bins_T044_T049_t199, patches = ax6.hist(differenza_T044_T049[:,1], bins = 'au
 #gaussiana = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
 #     np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
 
-mu_T044_T045_t100, sigma_T044_T045_t100 = sp.stats.norm.fit(differenza_T044_T045[:,0])
-mu_T044_T045_t199, sigma_T044_T045_t199 = sp.stats.norm.fit(differenza_T044_T045[:,1])
+mu_T047_T044_t100, sigma_T047_T044_t100 = sp.stats.norm.fit(differenza_T047_T044[:,0])
+mu_T047_T044_t199, sigma_T047_T044_t199 = sp.stats.norm.fit(differenza_T047_T044[:,1])
 
-mu_T044_T047_t100, sigma_T044_T047_t100 = sp.stats.norm.fit(differenza_T044_T047[:,0])
-mu_T044_T047_t199, sigma_T044_T047_t199 = sp.stats.norm.fit(differenza_T044_T047[:,1])
+mu_T047_T045_t100, sigma_T047_T045_t100 = sp.stats.norm.fit(differenza_T047_T045[:,0])
+mu_T047_T045_t199, sigma_T047_T045_t199 = sp.stats.norm.fit(differenza_T047_T045[:,1])
 
-mu_T044_T049_t100, sigma_T044_T049_t100 = sp.stats.norm.fit(differenza_T044_T049[:,0])
-mu_T044_T049_t199, sigma_T044_T049_t199 = sp.stats.norm.fit(differenza_T044_T049[:,1])
+mu_T047_T049_t100, sigma_T047_T049_t100 = sp.stats.norm.fit(differenza_T047_T049[:,0])
+mu_T047_T049_t199, sigma_T047_T049_t199 = sp.stats.norm.fit(differenza_T047_T049[:,1])
 
 #rv = sp.stats.crystalball(-0.01, 3)
 
-#mu_T044_T047_t100, sigma_T044_T047_t100, = sp.stats.crystalball.fit(differenza_T044_T047[:,0])
+#mu_T047_T045_t100, sigma_T047_T045_t100, = sp.stats.crystalball.fit(differenza_T047_T045[:,0])
 
-cv_T044_T045_t100 = sigma_T044_T045_t100 / abs(mu_T044_T045_t100) 
-cv_T044_T045_t199 = sigma_T044_T045_t199 / abs(mu_T044_T045_t199) 
+cv_T047_T044_t100 = sigma_T047_T044_t100 / abs(mu_T047_T044_t100) 
+cv_T047_T044_t199 = sigma_T047_T044_t199 / abs(mu_T047_T044_t199) 
 
-cv_T044_T047_t100 = sigma_T044_T047_t100 / abs(mu_T044_T047_t100) 
-cv_T044_T047_t199 = sigma_T044_T047_t199 / abs(mu_T044_T047_t199) 
+cv_T047_T045_t100 = sigma_T047_T045_t100 / abs(mu_T047_T045_t100) 
+cv_T047_T045_t199 = sigma_T047_T045_t199 / abs(mu_T047_T045_t199) 
 
-cv_T044_T049_t100 = sigma_T044_T049_t100 / abs(mu_T044_T049_t100) 
-cv_T044_T049_t199 = sigma_T044_T049_t199 / abs(mu_T044_T049_t199) 
+cv_T047_T049_t100 = sigma_T047_T049_t100 / abs(mu_T047_T049_t100) 
+cv_T047_T049_t199 = sigma_T047_T049_t199 / abs(mu_T047_T049_t199) 
 
-#crystalball_fit_line_T044_T047_t100 = sp.stats.crystalball.pdf(bins_T044_T047_t100, mu_T044_T047_t100, sigma_T044_T047_t100)
+#crystalball_fit_line_T047_T045_t100 = sp.stats.crystalball.pdf(bins_T047_T045_t100, mu_T047_T045_t100, sigma_T047_T045_t100)
 
-gaussian_fit_line_T044_T045_t100 = sp.stats.norm.pdf(bins_T044_T045_t100, mu_T044_T045_t100, sigma_T044_T045_t100)
-gaussian_fit_line_T044_T045_t199 = sp.stats.norm.pdf(bins_T044_T045_t199, mu_T044_T045_t199, sigma_T044_T045_t199)
+gaussian_fit_line_T047_T044_t100 = sp.stats.norm.pdf(bins_T047_T044_t100, mu_T047_T044_t100, sigma_T047_T044_t100)
+gaussian_fit_line_T047_T044_t199 = sp.stats.norm.pdf(bins_T047_T044_t199, mu_T047_T044_t199, sigma_T047_T044_t199)
 
-gaussian_fit_line_T044_T047_t100 = sp.stats.norm.pdf(bins_T044_T047_t100, mu_T044_T047_t100, sigma_T044_T047_t100)
-gaussian_fit_line_T044_T047_t199 = sp.stats.norm.pdf(bins_T044_T047_t199, mu_T044_T047_t199, sigma_T044_T047_t199)
+gaussian_fit_line_T047_T045_t100 = sp.stats.norm.pdf(bins_T047_T045_t100, mu_T047_T045_t100, sigma_T047_T045_t100)
+gaussian_fit_line_T047_T045_t199 = sp.stats.norm.pdf(bins_T047_T045_t199, mu_T047_T045_t199, sigma_T047_T045_t199)
 
-gaussian_fit_line_T044_T049_t100 = sp.stats.norm.pdf(bins_T044_T049_t100, mu_T044_T049_t100, sigma_T044_T049_t100)
-gaussian_fit_line_T044_T049_t199 = sp.stats.norm.pdf(bins_T044_T049_t199, mu_T044_T049_t199, sigma_T044_T049_t199)
+gaussian_fit_line_T047_T049_t100 = sp.stats.norm.pdf(bins_T047_T049_t100, mu_T047_T049_t100, sigma_T047_T049_t100)
+gaussian_fit_line_T047_T049_t199 = sp.stats.norm.pdf(bins_T047_T049_t199, mu_T047_T049_t199, sigma_T047_T049_t199)
 
 ax1.set_title(f'T = 0.45 t = 100')
-ax1.text(0.1, 0.8, f'μ = {mu_T044_T045_t100:.4f}\nσ = {sigma_T044_T045_t100:.4f}\ncv = {cv_T044_T045_t100:.3f}', fontsize = 10,  transform = ax1.transAxes)
+ax1.text(0.1, 0.8, f'μ = {mu_T047_T044_t100:.4f}\nσ = {sigma_T047_T044_t100:.4f}\ncv = {cv_T047_T044_t100:.3f}', fontsize = 10,  transform = ax1.transAxes)
 
 ax2.set_title(f'T = 0.45 t = 199')
-ax2.text(0.1, 0.8, f'μ = {mu_T044_T045_t199:.4f}\nσ = {sigma_T044_T045_t199:.4f}\ncv = {cv_T044_T045_t199:.3f}', fontsize = 10,  transform = ax2.transAxes)
+ax2.text(0.1, 0.8, f'μ = {mu_T047_T044_t199:.4f}\nσ = {sigma_T047_T044_t199:.4f}\ncv = {cv_T047_T044_t199:.3f}', fontsize = 10,  transform = ax2.transAxes)
 
 ax3.set_title(f'T = 0.47 t = 100')
-ax3.text(0.1, 0.8, f'μ = {mu_T044_T047_t100:.4f}\nσ = {sigma_T044_T047_t100:.4f}\ncv = {cv_T044_T047_t100:.3f}', fontsize = 10,  transform = ax3.transAxes)
+ax3.text(0.1, 0.8, f'μ = {mu_T047_T045_t100:.4f}\nσ = {sigma_T047_T045_t100:.4f}\ncv = {cv_T047_T045_t100:.3f}', fontsize = 10,  transform = ax3.transAxes)
 
 ax4.set_title(f'T = 0.47 t = 199')
-ax4.text(0.1, 0.8, f'μ = {mu_T044_T047_t199:.4f}\nσ = {sigma_T044_T047_t199:.4f}\ncv = {cv_T044_T047_t199:.3f}', fontsize = 10,  transform = ax4.transAxes)
+ax4.text(0.1, 0.8, f'μ = {mu_T047_T045_t199:.4f}\nσ = {sigma_T047_T045_t199:.4f}\ncv = {cv_T047_T045_t199:.3f}', fontsize = 10,  transform = ax4.transAxes)
 
 ax5.set_title(f'T = 0.49 t = 100')
-ax5.text(0.1, 0.8, f'μ = {mu_T044_T049_t100:.4f}\nσ = {sigma_T044_T049_t100:.4f}\ncv = {cv_T044_T049_t100:.3f}', fontsize = 10,  transform = ax5.transAxes)
+ax5.text(0.1, 0.8, f'μ = {mu_T047_T049_t100:.4f}\nσ = {sigma_T047_T049_t100:.4f}\ncv = {cv_T047_T049_t100:.3f}', fontsize = 10,  transform = ax5.transAxes)
 
 ax6.set_title(f'T = 0.49 t = 199')
-ax6.text(0.1, 0.8, f'μ = {mu_T044_T049_t199:.4f}\nσ = {sigma_T044_T049_t199:.4f}\ncv = {cv_T044_T049_t199:.3f}', fontsize = 10,  transform = ax6.transAxes)
+ax6.text(0.1, 0.8, f'μ = {mu_T047_T049_t199:.4f}\nσ = {sigma_T047_T049_t199:.4f}\ncv = {cv_T047_T049_t199:.3f}', fontsize = 10,  transform = ax6.transAxes)
 
-#ax1.plot(bins_T044_T047_t100, sp.stats.crystalball.pdf(bins_T044_T047_t100, -0.01,3,0))
+#ax1.plot(bins_T047_T045_t100, sp.stats.crystalball.pdf(bins_T047_T045_t100, -0.01,3,0))
 
-ax1.plot(bins_T044_T045_t100, gaussian_fit_line_T044_T045_t100)
-#ax1.plot(bins_T044_T047_t100, sp.stats.crystalball.pdf(bins_T044_T047_t100, -0.01,3,0))
-ax2.plot(bins_T044_T045_t199, gaussian_fit_line_T044_T045_t199)
-ax3.plot(bins_T044_T047_t100, gaussian_fit_line_T044_T047_t100)
-ax4.plot(bins_T044_T047_t199, gaussian_fit_line_T044_T047_t199)
-ax5.plot(bins_T044_T049_t100, gaussian_fit_line_T044_T049_t100)
-ax6.plot(bins_T044_T049_t199, gaussian_fit_line_T044_T049_t199)
+ax1.plot(bins_T047_T044_t100, gaussian_fit_line_T047_T044_t100)
+#ax1.plot(bins_T047_T045_t100, sp.stats.crystalball.pdf(bins_T047_T045_t100, -0.01,3,0))
+ax2.plot(bins_T047_T044_t199, gaussian_fit_line_T047_T044_t199)
+ax3.plot(bins_T047_T045_t100, gaussian_fit_line_T047_T045_t100)
+ax4.plot(bins_T047_T045_t199, gaussian_fit_line_T047_T045_t199)
+ax5.plot(bins_T047_T049_t100, gaussian_fit_line_T047_T049_t100)
+ax6.plot(bins_T047_T049_t199, gaussian_fit_line_T047_T049_t199)
 
 #plt.plot(bins, gaussiana, linewidth = 2, color = 'b')
 #plt.title(f'test.y (label) - predictions\n μ = {mu1}, σ = {sigma1}', loc = 'center', fontsize = 14, c='black')
