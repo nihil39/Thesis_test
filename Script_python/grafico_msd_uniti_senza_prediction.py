@@ -58,7 +58,7 @@ ax2.plot(array_msd_T044_medie[:, 0], array_msd_T044_medie[:, particle_type], col
 
 #ax2.set_title(f'Mean')
 ax2.legend()
-ax2.set_xlabel('time (#iterations)')
+ax2.set_xlabel('time (#iterations * Δt)')
 ax2.set_ylabel(r'$\langle r^2(t) \rangle$', fontsize = 14) #r' ' per scrivere in latex tra gli apici
 ax2.set_xscale('log')
 ax2.set_yscale('log')
